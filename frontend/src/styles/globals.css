@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 240, 249, 255;
+  --background-end-rgb: 255, 255, 255;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+  min-height: 100vh;
+}
+
+.chat-bubble-user {
+  @apply bg-secondary-500 text-white p-3 rounded-t-xl rounded-bl-xl max-w-xs md:max-w-md lg:max-w-lg;
+}
+
+.chat-bubble-bot {
+  @apply bg-gray-100 text-gray-800 p-3 rounded-t-xl rounded-br-xl max-w-xs md:max-w-md lg:max-w-lg;
+}
+
+.mood-button {
+  @apply flex flex-col items-center p-2 rounded-full transition-all duration-200 ease-in-out;
+}
+
+.mood-button.active {
+  @apply bg-primary-100 ring-2 ring-primary-500 ring-offset-2;
+}
+
+.mood-emoji {
+  @apply text-2xl mb-1;
+}
