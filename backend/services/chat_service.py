@@ -36,8 +36,8 @@ def process_chat_message(message, chat_id=None, mood='neutral'):
     combined_input = (
     "Here are some documents that might help answer the question: "
     + message
-   # + "\n\nRelevant Documents:\n"
-   # + "\n\n".join([doc.page_content for doc in relevant_docs])
+   + "\n\nRelevant Documents:\n"
+   + "\n\n".join([doc.page_content for doc in relevant_docs])
 )
     
     llm = ChatOpenAI(model="gpt-4o")
