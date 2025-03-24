@@ -8,7 +8,8 @@ This project consists of:
 
 1. **Frontend (Next.js)**: A web interface for users to interact with the chatbot
 2. **Backend (Flask API)**: RESTful API to process user input and generate responses
-3. **Langchain Integration** (to be implemented separately): For retrieval-augmented generation using chat models and prompt templates
+3. **Langchain Integration**: For retrieval-augmented generation using chat models and prompt templates
+
 
 ## Project Structure
 
