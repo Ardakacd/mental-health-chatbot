@@ -116,7 +116,7 @@ yarn install
 3. Create a `.env.local` file in the frontend directory with the following content:
 
 ```
-NEXT_PUBLIC_API_URL=http://localhost:5000/api
+NEXT_PUBLIC_API_URL=http://localhost:3001/api
 ```
 
 4. Run the development server:
