@@ -1,8 +1,12 @@
 import uuid
 import time
+from utils.vector_store import check_and_find_vector_store
+from langchain_openai import ChatOpenAI
+from langchain_core.prompts import ChatPromptTemplate
+from langchain.chains.combine_documents import create_stuff_documents_chain
+from langchain_core.messages import HumanMessage
 
-# This is a placeholder service that will be replaced with Langchain integration
-# It provides the structure you'll need when implementing the Langchain part
+
 
 def process_chat_message(message, chat_id=None, mood='neutral'):
     """
@@ -19,34 +23,57 @@ def process_chat_message(message, chat_id=None, mood='neutral'):
     # If no chat_id is provided, create a new one
     if not chat_id:
         chat_id = str(uuid.uuid4())
+
+    db = check_and_find_vector_store(mood)
+
+    retriever = db.as_retriever(
+    search_type="similarity",
+    search_kwargs={"k": 3},
+)
     
-    # This is where you would integrate with Langchain
-    # For now, we'll return placeholder responses based on mood
+    relevant_docs = retriever.invoke(message)
+
+    combined_input = (
+    "Here are some documents that might help answer the question: "
+    + message
+   # + "\n\nRelevant Documents:\n"
+   # + "\n\n".join([doc.page_content for doc in relevant_docs])
+)
     
-    # Simple mood-based responses (to be replaced with Langchain)
-    responses = {
-        'happy': "I'm glad you're feeling good! What would you like to talk about?",
-        'sad': "I'm sorry to hear you're feeling down. Would you like to talk about what's bothering you?",
-        'anxious': "I understand anxiety can be challenging. Let's discuss some techniques that might help.",
-        'stressed': "Stress can be overwhelming. Would you like to try a quick relaxation exercise?",
-        'neutral': "Thank you for sharing. How else can I support you today?"
-    }
+    llm = ChatOpenAI(model="gpt-4o")
+
+    qa_system_prompt = (
+    "You are a supportive mental health assistant designed to provide empathetic responses. "
+    "Use your general knowledge to answer casual greetings and simple questions. "
+    "For mental health related inquiries, primarily use information from the provided documents to give evidence-based guidance. "
+    "Always maintain a warm, compassionate tone while providing practical support. "
+    "If you don't know the answer or if the question requires professional medical advice, clearly acknowledge your limitations and suggest speaking with a mental health professional. "
+    "Keep responses concise (five sentences maximum) while still showing empathy. "
+    "Base your responses on the user's expressed mood when possible, tailoring your tone and advice accordingly."
+)
+
     
-    # Get a response based on mood, defaulting to neutral
-    response_text = responses.get(mood, responses['neutral'])
+
+    # Create a prompt template for answering questions
+    qa_prompt =  [
+        ("system", qa_system_prompt),
+        HumanMessage(combined_input)
+    ]
+   
     
-    # Simulate processing time (remove in production)
+    print(qa_prompt)
+
+    result = llm.invoke(qa_prompt)
+    
+    response_text = result.content
+    
+    # only for development
     time.sleep(0.5)
     
     return {
         "chat_id": chat_id,
         "response": response_text,
         "timestamp": time.time(),
-        "suggested_topics": [
-            "Coping strategies",
-            "Relaxation techniques",
-            "Positive thinking"
-        ]
     }
 
 def start_new_chat(initial_mood='neutral'):

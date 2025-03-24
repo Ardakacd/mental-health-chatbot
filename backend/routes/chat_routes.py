@@ -41,7 +41,7 @@ def new_chat():
     }
     """
     data = request.json or {}
-    initial_mood = data.get('initial_mood', 'neutral')
+    initial_mood = data.get('initial_mood', 'z')
     
     # Create a new chat session
     chat_data = start_new_chat(initial_mood)
