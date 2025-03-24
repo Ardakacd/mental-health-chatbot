@@ -1,4 +1,4 @@
-import { createContext, useState, useContext } from 'react';
+import { createContext, useState, useContext, useCallback } from 'react';
 import { sendMessage, startNewChat } from '../utils/api';
 
 const ChatContext = createContext();
@@ -7,7 +7,7 @@ export function ChatProvider({ children }) {
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [currentChatId, setCurrentChatId] = useState(null);
-  const [currentMood, setCurrentMood] = useState('neutral');
+  const [currentMood, setCurrentMood] = useState();
 
   // Add a new message to the chat (user or bot)
   const addMessage = (message, role) => {
@@ -56,6 +56,7 @@ export function ChatProvider({ children }) {
     try {
       // Clear existing messages
       setMessages([]);
+      setCurrentMood('')
       
       const response = await startNewChat({ initial_mood: initialMood });
       
@@ -63,7 +64,7 @@ export function ChatProvider({ children }) {
       setCurrentChatId(response.chat_id);
       
       // Add the bot's greeting to the chat
-      addMessage(response.greeting, 'assistant');
+      // addMessage(response.greeting, 'assistant');
       
       return response.chat_id;
     } catch (error) {
@@ -75,9 +76,9 @@ export function ChatProvider({ children }) {
   };
 
   // Update the user's mood
-  const updateMood = (mood) => {
+  const updateMood = useCallback((mood) => {
     setCurrentMood(mood);
-  };
+  }, []);
 
   return (
     <ChatContext.Provider

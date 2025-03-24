@@ -9,11 +9,6 @@ const Footer = () => {
               </p>
             </div>
             
-            <div className="flex space-x-6">
-              <p className="text-gray-600 text-sm">
-                This is a demonstration project and not a substitute for professional mental health care.
-              </p>
-            </div>
           </div>
         </div>
       </footer>
